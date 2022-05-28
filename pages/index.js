@@ -2,20 +2,42 @@ import useSWR from "swr";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
-function Profile() {
-  const { data, error } = useSWR("/api/random", fetcher);
+function Index() {
+  const { data, error } = useSWR("/api/random/formated", fetcher);
 
-  if (error) return <div>Failed to load</div>;
-  if (!data) return <div>Loading...</div>;
+  if (error)
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="max-w-md">
+          <div className="text-2xl text-red-500">Failed to load</div>
+        </div>
+      </div>
+    );
+  if (!data)
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="max-w-md">
+          <div className="animate-pulse text-2xl text-gray-600"></div>
+        </div>
+      </div>
+    );
 
   return (
     <div className="flex h-screen items-center justify-center">
-      <div className="max-w-md">
-        <h1 className="whitespace-pre-line text-4xl">{data[0].wndttt}</h1>
-        <p>{data[0].category}</p>
+      <div className="max-w-md text-center text-4xl">
+        {data.map((data, index) => {
+          return (
+            <p
+              key={index}
+              style={{ fontFamily: data.font, fontSize: data.size }}
+            >
+              {data.p}
+            </p>
+          );
+        })}
       </div>
     </div>
   );
 }
 
-export default Profile;
+export default Index;

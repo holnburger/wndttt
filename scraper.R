@@ -35,7 +35,7 @@ extract_pages <- function(url, category) {
   )
 }
 
-wndttt_pages <- map2_dfr(categories$url, categories$category, extract_pages)
+wndttt_pages <- map2_dfr(category$url, category$category, extract_pages)
 
 extract_wandtattoo <- function(url, category) {
   page <- read_html(url)
@@ -67,12 +67,17 @@ wndttt_data <- future_map2_dfr(wndttt_pages$url,
 # final cleaning (still an issue with html_text2 with printing mso data)
 wndttt_data_clean <- wndttt_data %>%
   filter(!str_detect(wndttt, "[if gte mso 9]>")) %>%
-  filter(!is.na(wndttt))
+  filter(!is.na(wndttt)) %>%
+  mutate(nchar = nchar(wndttt))
 
 
 # write it down to sqlite
 con <- dbConnect(RSQLite::SQLite(), "wndttt_data.db")
 
-dbCreateTable(con, "wndttt", wndttt_data_clean)
+dbRemoveTable(con, "wndttt")
+
+dbExecute(con, "create table wndttt(id INTEGER PRIMARY KEY AUTOINCREMENT, wndttt text, category varchar(255), url varchar(255), nchar INTEGER);")
+
+dbWriteTable(con, "wndttt", wndttt_data_clean, append = TRUE)
 
 dbDisconnect(con)

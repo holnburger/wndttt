@@ -23,18 +23,20 @@ function Index() {
     );
 
   return (
-    <div className="absolute inset-0 flex h-screen items-center justify-center">
-      <div className="max-w-md p-2 text-center text-4xl text-opacity-80">
-        {data.map((data, index) => {
-          return (
-            <p
-              key={index}
-              style={{ fontFamily: data.font, fontSize: data.size }}
-            >
-              {data.p}
-            </p>
-          );
-        })}
+    <div className="absolute inset-0">
+      <div className="flex h-screen items-center justify-center">
+        <div className="max-w-md p-2 text-center text-4xl text-opacity-80">
+          {data.map((data, index) => {
+            return (
+              <p
+                key={index}
+                style={{ fontFamily: data.font, fontSize: data.size }}
+              >
+                {data.p}
+              </p>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
